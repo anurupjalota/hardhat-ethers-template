@@ -8,7 +8,9 @@ describe('Greeter', () => {
 			users: [alice],
 		} = await setupGreeter()
 
-		await deployer.Greeter.setGreeting('Hi, Alice!')
+		expect(await deployer.Greeter.setGreeting('Hi, Alice!'))
+			.to.emit(deployer.Greeter, 'SetGreeting')
+			.withArgs('Hi, Alice!')
 
 		expect(await alice.Greeter.greet()).to.equal('Hi, Alice!')
 	})
@@ -23,6 +25,7 @@ describe('Greeter', () => {
 		await expect(
 			alice.Greeter.setGreeting('Hi, Alice!')
 		).to.be.revertedWith('Ownable: caller is not the owner')
+
 		await deployer.Greeter.setGreeting('Hi, Alice!')
 	})
 })
